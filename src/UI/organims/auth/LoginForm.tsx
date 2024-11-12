@@ -55,7 +55,7 @@ export const LoginForm = () => {
             }
 
             console.log("Inicio de sesión exitoso. Redirigiendo...");
-            router.push("/dashboard/home");
+            router.push("/dashboard/proyect");
             router.refresh();
         } catch (error) {
             console.error("Error durante el proceso de login:", error); 

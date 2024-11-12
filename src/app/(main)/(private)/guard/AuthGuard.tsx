@@ -12,7 +12,7 @@ export default function AuthGuard(
     console.log(data, status)
     useEffect(() => {
         if (status === "unauthenticated") {
-            router.push("/login")
+            router.push("/")
         }
 
     }, [status, router])

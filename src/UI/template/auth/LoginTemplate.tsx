@@ -6,7 +6,7 @@ export const LoginTemplate = () => {
     return (
         <div >
             <div >
-            <Link href="/dashboard/home" className={styles.link}>
+            <Link href="/home" className={styles.link}>
                 volver al Inicio
             </Link>
            
