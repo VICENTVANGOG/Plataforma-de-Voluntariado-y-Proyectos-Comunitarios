@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from "next-auth/next";
 import { authOptions, CustomSession } from "../../../auth/[...nextauth]/route";
 
-const defaultBaseUrl = "https://beautysalongates-production.up.railway.app/api/v1";
+const defaultBaseUrl = "https://communnityvolunteering-production.up.railway.app";
 
 export async function POST(request: Request, { params }: { params: { url: string } }) {
     try {

@@ -1,4 +1,10 @@
-export interface ILoginResponse {
-    message: string;
-    token: string;
+
+export interface LoginResponse {
+    data: any;
+    access_token: string;
+    user: {
+        email: string;
+        sub: number; 
+        role: string;  
+    };
 }

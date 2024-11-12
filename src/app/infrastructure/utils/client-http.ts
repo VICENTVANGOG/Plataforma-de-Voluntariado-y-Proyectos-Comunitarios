@@ -1,7 +1,7 @@
 import { authOptions, CustomSession } from "@/app/api/auth/[...nextauth]/route"
 import { getServerSession } from "next-auth/next"
 
-const defaultBaseUrl = "https://beautysalongates-production.up.railway.app/api/v1"
+const defaultBaseUrl = "https://communnityvolunteering-production.up.railway.app"
 
 export class HttpClient {
     private baseUrl: string;

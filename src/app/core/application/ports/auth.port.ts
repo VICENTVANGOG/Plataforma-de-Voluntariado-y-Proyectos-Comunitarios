@@ -1,4 +1,4 @@
-import { ILoginRequest, ILoginResponse } from "../dto";
+import { ILoginRequest, LoginResponse } from "../dto";
 
 export interface PAuth {
     /**
@@ -6,5 +6,5 @@ export interface PAuth {
      * @param 
      */
 
-    login(req: ILoginRequest): Promise<ILoginResponse>
+    login(req: ILoginRequest): Promise<LoginResponse>
 }
