@@ -7,8 +7,10 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import Link from "next/link";
+import styles from "../sass/LoginForm.module.scss";
 
-// Validación con Yup
+
 const loginSchema = yup.object().shape({
     email: yup
         .string()
@@ -38,7 +40,6 @@ export const LoginForm = () => {
         console.log("Datos recibidos para login:", data); 
 
         try {
-
             const result = await signIn("credentials", {
                 redirect: false, 
                 email: data.email,
@@ -91,36 +92,42 @@ export const LoginForm = () => {
     };
 
     return (
-        <form
-            className="w-full max-w-sm mx-auto p-4 space-y-4"
-            onSubmit={handleSubmit(handleLogin)}
-        >
-            <h2 className="text-2xl font-semibold text-center">Iniciar Sesión</h2>
+      
+<form className={styles.loginForm} onSubmit={handleSubmit(handleLogin)}>
+    <h2>Iniciar Sesión</h2>
 
-            <FormField<ILoginRequest>
-                control={control}
-                type="email"
-                label="Correo Electrónico"
-                name="email"
-                error={errors.email}
-                placeholder="Ingresa tu correo"
-            />
+    <FormField<ILoginRequest>
+        control={control}
+        type="email"
+        label="Correo Electrónico"
+        name="email"
+        error={errors.email}
+        placeholder="Ingresa tu correo"
+        className={styles.formField}
+    />
 
-            <FormField<ILoginRequest>
-                control={control}
-                type="password"
-                label="Contraseña"
-                name="password"
-                error={errors.password}
-                placeholder="Ingresa tu contraseña"
-            />
+    <FormField<ILoginRequest>
+        control={control}
+        type="password"
+        label="Contraseña"
+        name="password"
+        error={errors.password}
+        placeholder="Ingresa tu contraseña"
+        className={styles.formField}
+    />
 
-            <button
-                type="submit"
-                className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600"
-            >
-                Iniciar Sesión
-            </button>
-        </form>
+    <button type="submit" className={styles.button}>
+        Iniciar Sesión
+    </button>
+
+    <div className={styles.linkContainer}>
+        <p>
+            ¿No tienes una cuenta?{" "}
+            <Link href="/registro" className={styles.link}>
+                Regístrate aquí
+            </Link>
+        </p>
+    </div>
+</form>
     );
 };

@@ -17,8 +17,8 @@ interface IPropsFormField<T extends FieldValues> {
     error?: FieldError;
     id?: string;
     placeholder?: string;
+    className?: string;
 }
-
 export const FormField = <T extends FieldValues>({
     label,
     type,
@@ -27,12 +27,13 @@ export const FormField = <T extends FieldValues>({
     error,
     id,
     placeholder,
+    className, // Añadido para utilizar className
 }: IPropsFormField<T>) => {
     return (
-        <div className="w-full flex  flex-col mb-4">
+        <div className={`w-full flex flex-col mb-4 ${className || ""}`}>
             <label
                 htmlFor={id || label.toLowerCase()}
-                className={`text-sm font-medium`}
+                className="text-sm font-medium"
             >
                 {label}
             </label>
