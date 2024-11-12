@@ -1,0 +1,75 @@
+
+$primary-color: #1a365d;
+$text-color: #1a365d;
+$background-color: #ffffff;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
+.navbar {
+  background-color: $background-color;
+  padding: 1rem 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  &__content {
+    @include flex-center;
+    justify-content: space-between;
+  }
+
+  &__logo {
+    @include flex-center;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $primary-color;
+  }
+
+  &__menu {
+    @include flex-center;
+  }
+
+  &__menu-items {
+    @include flex-center;
+    gap: 1rem;
+  }
+}
+
+
+.button {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+
+  &--text {
+    background-color: transparent;
+    color: $text-color;
+
+    &:hover {
+      background-color: rgba($text-color, 0.05);
+    }
+  }
+
+  &--primary {
+    background-color: $primary-color;
+    color: white;
+
+    &:hover {
+      background-color: darken($primary-color, 5%);
+    }
+  }
+}

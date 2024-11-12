@@ -1,0 +1,51 @@
+.button {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+  
+    &:hover {
+      transform: translateY(-1px);
+    }
+  
+    &:active {
+      transform: translateY(1px);
+    }
+  
+    // Variants
+    &--primary {
+      background-color: #3498db;
+      color: white;
+  
+      &:hover {
+        background-color: darken(#3498db, 10%);
+      }
+    }
+  
+    &--secondary {
+      background-color: #2ecc71;
+      color: white;
+  
+      &:hover {
+        background-color: darken(#2ecc71, 10%);
+      }
+    }
+  
+    // Sizes
+    &--small {
+      font-size: 12px;
+      padding: 8px 16px;
+    }
+  
+    &--medium {
+      font-size: 14px;
+      padding: 10px 20px;
+    }
+  
+    &--large {
+      font-size: 16px;
+      padding: 12px 24px;
+    }
+  }
