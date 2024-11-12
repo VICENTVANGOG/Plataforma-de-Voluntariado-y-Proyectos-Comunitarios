@@ -1,6 +1,5 @@
-"use client";
-
 import { Input } from "@/UI/atoms";
+import "./FormField.scss";
 import {
     Control,
     Controller,
@@ -8,6 +7,7 @@ import {
     FieldValues,
     Path,
 } from "react-hook-form";
+
 
 interface IPropsFormField<T extends FieldValues> {
     label: string;
@@ -27,13 +27,13 @@ export const FormField = <T extends FieldValues>({
     error,
     id,
     placeholder,
-    className, // Añadido para utilizar className
+    className, 
 }: IPropsFormField<T>) => {
     return (
-        <div className={`w-full flex flex-col mb-4 ${className || ""}`}>
+        <div className={`form-field ${className || ""}`}>
             <label
                 htmlFor={id || label.toLowerCase()}
-                className="text-sm font-medium"
+                className="form-field__label"
             >
                 {label}
             </label>
@@ -47,9 +47,11 @@ export const FormField = <T extends FieldValues>({
                         error={error?.message}
                         placeholder={placeholder || `Ingrese su ${label.toLowerCase()}`}
                         {...field}
+                        className="form-field__input"
                     />
                 )}
             />
+            {error && <p className="form-field__error">{error.message}</p>}
         </div>
     );
 };
