@@ -1,9 +1,10 @@
+import SidebarLayout from '@/UI/template/sidebar-loyout/sidebar'
 import React from 'react'
 
 export default function page() {
   return (
     <div>
-      <h1>proyect home</h1>
+      <SidebarLayout children={undefined}/>
     </div>
   )
 }

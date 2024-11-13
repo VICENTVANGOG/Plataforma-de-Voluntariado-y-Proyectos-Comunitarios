@@ -1,0 +1,94 @@
+// src/styles/PerfilPage.module.scss
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  .profile-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    text-align: center;
+  }
+  
+  .profile-card h1 {
+    font-size: 2rem;
+    color: #4b4b4b;
+    margin-bottom: 20px;
+  }
+  
+  .profile-card .profile-photo {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+  }
+  
+  .profile-card .user-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2e2e2e;
+    margin-bottom: 10px;
+  }
+  
+  .profile-card .user-email {
+    font-size: 1rem;
+    color: #777;
+    margin-bottom: 15px;
+  }
+  
+  .profile-card .user-role {
+    font-size: 1rem;
+    color: #0073e6;
+    margin-bottom: 25px;
+  }
+  
+  .profile-card form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .profile-card form input {
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  
+  .profile-card form button {
+    padding: 12px;
+    border: none;
+    background-color: #0073e6;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .profile-card form button:hover {
+    background-color: #005bb5;
+  }
+  
+  .error {
+    color: #e74c3c;
+    font-size: 0.875rem;
+    margin-top: -10px;
+    margin-bottom: 15px;
+  }
+  
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 1.5rem;
+  }
+  
