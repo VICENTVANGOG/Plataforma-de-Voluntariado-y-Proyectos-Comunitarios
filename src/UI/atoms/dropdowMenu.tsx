@@ -1,4 +1,3 @@
-"use client"
 import React, { useState } from 'react'
 import styles from './DropdownMenu.module.scss'
 
@@ -11,7 +10,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({ trigger, children })
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className={styles.dropdown}>
+    <div className={`${styles.dropdown} ${isOpen ? styles.open : ''}`}>
       <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>
       {isOpen && <div className={styles.dropdownContent}>{children}</div>}
     </div>

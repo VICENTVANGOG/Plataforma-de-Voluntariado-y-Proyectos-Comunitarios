@@ -9,6 +9,7 @@ export class AuthService implements PAuth {
     constructor() {
         this.clientHttp = new HttpClient();
     }
+    
 
 
     async login(req: ILoginRequest): Promise<LoginResponse> {

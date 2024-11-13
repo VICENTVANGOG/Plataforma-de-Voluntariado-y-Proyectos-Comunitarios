@@ -12,7 +12,7 @@ export class AuthService implements PAuth {
     login(req: ILoginRequest): Promise<LoginResponse> {
         throw new Error("Method not implemented.");
     }
-
+    
     async register(req: IRegisterRequest): Promise<RegisterResponse> {
         try {
             const response = await this.clientHttp.post<RegisterResponse, IRegisterRequest>(
@@ -20,9 +20,10 @@ export class AuthService implements PAuth {
                 req
             );
             return response;  
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error en el registro:", error);  
-            throw new Error("Error al registrar el usuario");  
+            throw new Error(`Error al registrar el usuario: ${error.message || error}`);
         }
     }
+   
 }

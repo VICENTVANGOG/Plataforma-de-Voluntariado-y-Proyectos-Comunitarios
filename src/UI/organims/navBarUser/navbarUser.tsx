@@ -1,5 +1,4 @@
-'use client'
-
+"use client"
 import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
 import { Download, LogOut, Plus, ChevronDown } from "lucide-react"
@@ -8,7 +7,11 @@ import Button from '@/UI/atoms/button'
 import styles from "./NavBar.module.scss"
 
 export default function NavBar() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
+
+  if (status === "loading") {
+    return <div>Cargando...</div> 
+  }
 
   return (
     <nav className={styles.navbar}>
@@ -28,31 +31,31 @@ export default function NavBar() {
           Nuevo Proyecto
         </Button>
         {session?.user ? (
-          <DropdownMenu
-            trigger={
-              <div className={styles.userInfo}>
-                <div className={styles.profileImageWrapper}>
-                  <img
-                    // Usamos la URL de la foto directamente desde session.user.photo
-                    src={session.user.photo || "https://via.placeholder.com/150"} // Imagen predeterminada externa
-                    alt="Foto de perfil"
-                    width={40}
-                    height={40}
-                    className={styles.profileImage}
-                  />
-                </div>
-                <span className={styles.userName}>{session.user.name}</span>
-                <ChevronDown className="h-4 w-4 text-muted" /> {/* Icono de flecha hacia abajo */}
-              </div>
-            }
-          >
-            <DropdownMenuItem>Perfil</DropdownMenuItem>
-            <DropdownMenuItem>Configuración</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => signOut()} className="text-destructive">
-              <LogOut className="mr-2 h-4 w-4" />
-              Cerrar sesión
-            </DropdownMenuItem>
-          </DropdownMenu>
+       <DropdownMenu
+       trigger={
+         <div className={styles.userInfo}>
+           <div className={styles.profileImageWrapper}>
+             <img
+               src={session.user.photo || "https://via.placeholder.com/150"}
+               alt="Foto de perfil"
+               width={40}
+               height={40}
+               className={styles.profileImage}
+             />
+           </div>
+           <span className={styles.userName}>{session.user.name}</span>
+           <ChevronDown className="h-4 w-4 text-muted" />
+         </div>
+       }
+     >
+       <DropdownMenuItem className={styles.menuItem}>Perfil</DropdownMenuItem>
+       <DropdownMenuItem className={styles.menuItem}>Configuración</DropdownMenuItem>
+       <DropdownMenuItem onClick={() => signOut()} className={`${styles.menuItem} ${styles.signOut}`}>
+         <LogOut className="mr-2 h-4 w-4" />
+         Cerrar sesión
+       </DropdownMenuItem>
+     </DropdownMenu>
+     
         ) : (
           <Button variant="outline" size="small">
             Iniciar sesión

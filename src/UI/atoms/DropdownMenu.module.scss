@@ -1,51 +1,78 @@
-
 .dropdown {
-    position: relative;
-  }
-  
-  .dropdownContent {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-  }
-  
-  .dropdownItem {
-    padding: 8px 16px;
-    cursor: pointer;
-  }
-  
-  .dropdownItem:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .userInfo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .profileImageWrapper {
-    border-radius: 50%;
-    overflow: hidden;
-  }
-  
-  .profileImage {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-  }
-  
-  .userName {
-    font-size: 14px;
-    font-weight: 500;
-  }
-  
-  .dropdownArrow {
-    font-size: 12px;
-  }
-  
+  position: relative;
+  display: inline-block;
+}
+
+.dropdownContent {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;  // Bordes más redondeados
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  // Sombra más sutil y difusa
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;  // Para que no se pueda interactuar con el menú cuando esté oculto
+}
+
+.dropdown.open .dropdownContent {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;  // Permite la interacción cuando el menú está visible
+}
+
+.dropdownItem {
+  padding: 12px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, padding 0.2s ease;  // Transición para mejor efecto visual
+  display: flex;
+  align-items: center;
+  gap: 10px;  // Espaciado entre el icono y el texto (si los hay)
+  border-radius: 6px;  // Bordes redondeados para el item
+}
+
+.dropdownItem:hover {
+  background-color: #f5f5f5;
+  padding-left: 24px;  // Desplazamiento sutil hacia la izquierda en hover
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;  // Un poco más de espacio entre los elementos
+}
+
+.profileImageWrapper {
+  border-radius: 50%;
+  overflow: hidden;
+  width: 36px;  // Tamaño más pequeño para la imagen de perfil
+  height: 36px;
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.userName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;  // Color más oscuro para el nombre
+}
+
+.dropdownArrow {
+  font-size: 12px;
+  color: #777;
+  transition: transform 0.3s ease;  // Efecto suave para rotación del ícono de la flecha
+}
+
+.dropdownArrow.rotate {
+  transform: rotate(180deg);  // Gira la flecha cuando el menú está abierto
+}

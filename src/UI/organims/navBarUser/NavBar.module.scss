@@ -46,3 +46,90 @@
     font-weight: 500;
     color: #374151;
   }
+
+
+
+
+
+  .userInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+  
+    &:hover {
+      background-color: #f1f1f1;
+      border-radius: 8px;
+    }
+  }
+  
+  .profileImageWrapper {
+    border-radius: 50%;
+    overflow: hidden;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .profileImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+  
+  .profileImageWrapper:hover .profileImage {
+    transform: scale(1.1);
+  }
+  
+  .userName {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    transition: color 0.3s ease;
+  }
+  
+  .userInfo:hover .userName {
+    color: #3b82f6; // Resalta el nombre del usuario al pasar el mouse
+  }
+  
+  .menuItem {
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, padding-left 0.3s ease;
+  
+    &:hover {
+      background-color: #f3f4f6;
+      padding-left: 24px;
+    }
+  }
+  
+  .signOut {
+    color: #ef4444;
+    &:hover {
+      background-color: #fee2e2;
+    }
+  
+    .mr-2 {
+      margin-right: 8px;
+    }
+  }
+  
+  .chevronDown {
+    color: #6b7280;
+    transition: transform 0.3s ease;
+  }
+  
+  .chevronDown.rotate {
+    transform: rotate(180deg);
+  }
+  

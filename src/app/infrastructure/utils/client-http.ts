@@ -14,22 +14,31 @@ export class HttpClient {
         const headers: Record<string, string> = {
             "Content-Type": "application/json",
         };
-
-    const session = await getServerSession(authOptions) as CustomSession;
-    if (session && session.user.token) {
-        headers["Authorization"] = `Bearer ${session.user.token}`;
-    }
-
+   
+        if (typeof window === "undefined") { 
+            const session = await getServerSession(authOptions) as CustomSession;
+            if (session && session.user.token) {
+                headers["Authorization"] = `Bearer ${session.user.token}`;
+            }
+        }
+   
         return headers;
     }
-
     private async handleResponse(response: Response) {
         if (!response.ok) {
-            const errorData = await response.json();
+            const errorData = await response.json().catch(() => ({ message: "Error desconocido" }));
             throw errorData;
         }
-        return await response.json();
+   
+        const contentType = response.headers.get("Content-Type");
+   
+        if (contentType && contentType.includes("application/json")) {
+            return await response.json();
+        } else {
+            return response.text();  
+        }
     }
+   
     
     async get<T>(url: string): Promise<T> {
         const headers = await this.getHeader();

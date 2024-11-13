@@ -1,21 +1,22 @@
-'use client'
-
-import { IRegisterRequest } from "@/app/core/application/dto"
-import { AuthService } from "@/app/infrastructure/services/register.service"
-import { yupResolver } from "@hookform/resolvers/yup"
-import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
-import * as yup from "yup"
-import Link from "next/link"
-import { Apple, Facebook, Twitter } from 'lucide-react'
-import styles from './register.module.scss'
+"use client";
+import { IRegisterRequest } from "@/app/core/application/dto";
+import { AuthService } from "@/app/infrastructure/services/register.service";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import Link from "next/link";
+import { Apple, Facebook, Twitter } from "lucide-react";
+import styles from "./register.module.scss";
+import { useState } from "react";
 
 const registerSchema = yup.object().shape({
-    email: yup.string().email("El correo es inválido").required("El correo es obligatorio"),
-    password: yup.string().min(8, "La contraseña debe tener al menos 8 caracteres").required("La contraseña es obligatoria"),
-    confirmPassword: yup.string().oneOf([yup.ref('password')], 'Las contraseñas deben coincidir').required("Confirmar la contraseña es obligatorio"),
-    role: yup.string().required("El rol es obligatorio")
-  });
+  email: yup.string().email("El correo es inválido").required("El correo es obligatorio"),
+  password: yup.string().min(8, "La contraseña debe tener al menos 8 caracteres").required("La contraseña es obligatoria"),
+  name: yup.string().required("El nombre es obligatorio"),
+  role: yup.string().required("El rol es obligatorio"),
+  photo: yup.string().required("La foto es obligatoria"),
+});
 
 export const RegisterForm = () => {
   const {
@@ -27,40 +28,59 @@ export const RegisterForm = () => {
     mode: "onChange",
     reValidateMode: "onChange",
     resolver: yupResolver(registerSchema),
-  })
+  });
 
-  const router = useRouter()
+  const [photo, setPhoto] = useState<File | null>(null);
+  const router = useRouter();
 
-  const handleRegister = async (data: IRegisterRequest) => {
+  // Manejador de errores
+  const handleError = (error: string) => {
+    setError("email", { message: error });
+  };
+
+  // Función para manejar la selección de imagen
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setPhoto(file);
+    }
+  };
+
+  // Maneja el envío del formulario
+  const onSubmit = async (data: IRegisterRequest) => {
+    // Verificamos si hay una foto seleccionada
+    if (!photo) {
+      setError("photo", { message: "La foto es obligatoria" });
+      return;
+    }
+
     try {
-      const authService = new AuthService()
-      const result = await authService.register(data)
+      // Log de los datos antes de enviarlos
+      console.log('Datos enviados para el registro:', { ...data, photo });
+
+      const authService = new AuthService();
+      const result = await authService.register({ ...data, photo: photo.name });
 
       if (result?.statusCode !== 201) {
-        handleError(result.message)
-        return
+        handleError(result.message);
+        return;
       }
 
-      router.push("/dashboard/home")
-      router.refresh()
+      // Redirige si el registro es exitoso
+      router.push("/dashboard/home");
+      router.refresh();
     } catch (error) {
-      handleError("Hubo un error durante el registro, por favor intente nuevamente.")
+      handleError("Hubo un error durante el registro, por favor intente nuevamente.");
     }
-  }
-
-  const handleError = (error: string) => {
-    setError("email", {
-      message: error,
-    })
-  }
+  };
 
   return (
     <main className={styles.container}>
       <div className={styles.loginContainer}>
         <div className={styles.formSection}>
           <h1 className={styles.title}>Registrarse</h1>
-          
-          <form className={styles.form} onSubmit={handleSubmit(handleRegister)}>
+
+          <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.inputGroup}>
               <label htmlFor="email" className={styles.label}>Correo Electrónico</label>
               <input
@@ -72,7 +92,7 @@ export const RegisterForm = () => {
               />
               {errors.email && <span className={styles.error}>{errors.email.message}</span>}
             </div>
-            
+
             <div className={styles.inputGroup}>
               <label htmlFor="password" className={styles.label}>Contraseña</label>
               <input
@@ -86,15 +106,15 @@ export const RegisterForm = () => {
             </div>
 
             <div className={styles.inputGroup}>
-              <label htmlFor="confirmPassword" className={styles.label}>Confirmar Contraseña</label>
+              <label htmlFor="name" className={styles.label}>Nombre</label>
               <input
-                {...register("confirmPassword")}
-                type="password"
-                id="confirmPassword"
-                placeholder="Confirma tu contraseña"
+                {...register("name")}
+                type="text"
+                id="name"
+                placeholder="Ingresa tu nombre"
                 className={styles.input}
               />
-              {errors.confirmPassword && <span className={styles.error}>{errors.confirmPassword.message}</span>}
+              {errors.name && <span className={styles.error}>{errors.name.message}</span>}
             </div>
 
             <div className={styles.inputGroup}>
@@ -108,20 +128,33 @@ export const RegisterForm = () => {
               />
               {errors.role && <span className={styles.error}>{errors.role.message}</span>}
             </div>
-            
+
+            <div className={styles.inputGroup}>
+              <label htmlFor="photo" className={styles.label}>Selecciona tu foto de perfil</label>
+              <input
+                {...register("photo")}
+                type="file"
+                id="photo"
+                accept="image/*"
+                className={styles.input}
+                onChange={handleImageChange}
+              />
+              {errors.photo && <span className={styles.error}>{errors.photo.message}</span>}
+            </div>
+
             <button type="submit" className={styles.loginButton}>
               Registrarse
             </button>
-            
+
             <div className={styles.register}>
               <span>¿Ya tienes una cuenta? </span>
               <Link href="/login" className={styles.registerLink}>Inicia sesión</Link>
             </div>
-            
+
             <div className={styles.divider}>
               <span>O Regístrate Con</span>
             </div>
-            
+
             <div className={styles.socialLogin}>
               <button type="button" className={styles.socialButton} aria-label="Registrarse con Apple">
                 <Apple className={styles.socialIcon} />
@@ -135,7 +168,7 @@ export const RegisterForm = () => {
             </div>
           </form>
         </div>
-        
+
         <div className={styles.illustrationSection}>
           <img 
             src="/login.png" 
@@ -145,5 +178,5 @@ export const RegisterForm = () => {
         </div>
       </div>
     </main>
-  )
-}
+  );
+};

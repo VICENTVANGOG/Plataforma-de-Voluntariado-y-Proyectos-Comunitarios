@@ -1,7 +1,8 @@
 export interface IRegisterRequest {
     email: string;
     password: string;
-    confirmPassword: string;
+    name: string;
     role: string;
-    photo: string;
-}
+    photo: string; 
+  }
+  

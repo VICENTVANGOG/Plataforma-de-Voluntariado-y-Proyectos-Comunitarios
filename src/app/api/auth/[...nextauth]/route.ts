@@ -8,6 +8,8 @@ interface AuthUser {
   name: string;
   email: string;
   token: string;
+  role: string;   // Agrega el rol
+  photo: string;  // Agrega la foto de perfil
 }
 
 export interface CustomSession extends Session {
@@ -46,12 +48,16 @@ export const authOptions: NextAuthOptions = {
             return null;  // Si no hay token, retornamos null
           }
 
-          // Si el token es válido, creamos un objeto AuthUser
+          // Asegúrate de agregar todos los campos necesarios de la respuesta
+          const user = response.data.user;
+
           return {
-            email: response.data.user.email,
-            id: response.data.user.sub.toString(),
-            name: response.data.user.email,
+            email: user.email,
+            id: user.sub.toString(),
+            name: user.email,  // O usa el campo adecuado para el nombre
             token: response.data.access_token,  // Asegúrate de pasar el token aquí
+            role: user.role || "usuario",  // Si existe el campo `role`, usalo, si no, por defecto "usuario"
+            photo: user.photo || "https://via.placeholder.com/150",  // Asegúrate de pasar la foto si existe
           } as AuthUser;
 
         } catch (error) {
@@ -67,9 +73,11 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        // Aquí añadimos el token al JWT
+        // Aquí añadimos los nuevos campos al JWT
         token.id = user.id;
-        token.token = user.token;  // Añadimos el access_token en el token de la sesión
+        token.token = user.token;
+        token.role = user.role;  // Añadimos el rol al JWT
+        token.photo = user.photo;  // Añadimos la foto al JWT
       }
       return token;  // Retornamos el token con la información actualizada
     },
@@ -78,6 +86,8 @@ export const authOptions: NextAuthOptions = {
       const customSession = session as CustomSession;
       customSession.user.id = token.id as string;
       customSession.user.token = token.token as string;
+      customSession.user.role = token.role as string;  // Asignamos el rol
+      customSession.user.photo = token.photo as string;  // Asignamos la foto
       return customSession;  // Retornamos la sesión actualizada
     },
   },
