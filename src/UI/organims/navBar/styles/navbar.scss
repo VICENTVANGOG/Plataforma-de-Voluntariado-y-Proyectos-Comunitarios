@@ -4,6 +4,7 @@ $text-color: #1a365d;
 
 @mixin flex-center {
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 
@@ -14,6 +15,7 @@ $text-color: #1a365d;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
+    text-decoration: none
   }
 
   &__content {
@@ -69,4 +71,9 @@ $text-color: #1a365d;
       background-color: darken($primary-color, 5%);
     }
   }
+}
+
+
+.A{
+  text-decoration: none;
 }

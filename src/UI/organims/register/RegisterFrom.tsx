@@ -1,117 +1,149 @@
-"use client";
+'use client'
 
-import { IRegisterRequest } from "@/app/core/application/dto";
-import { AuthService } from "@/app/infrastructure/services/register.service";
-import { FormField } from "@/UI/molecules";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
+import { IRegisterRequest } from "@/app/core/application/dto"
+import { AuthService } from "@/app/infrastructure/services/register.service"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import * as yup from "yup"
+import Link from "next/link"
+import { Apple, Facebook, Twitter } from 'lucide-react'
+import styles from './register.module.scss'
 
+const registerSchema = yup.object().shape({
+    email: yup.string().email("El correo es inválido").required("El correo es obligatorio"),
+    password: yup.string().min(8, "La contraseña debe tener al menos 8 caracteres").required("La contraseña es obligatoria"),
+    confirmPassword: yup.string().oneOf([yup.ref('password')], 'Las contraseñas deben coincidir').required("Confirmar la contraseña es obligatorio"),
+    role: yup.string().required("El rol es obligatorio")
+  });
 
 export const RegisterForm = () => {
-    const {
-        control,
-        handleSubmit,
-        setError,
-        formState: { errors },
-    } = useForm<IRegisterRequest>({
-        mode: "onChange",
-        reValidateMode: "onChange",
-    });
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<IRegisterRequest>({
+    mode: "onChange",
+    reValidateMode: "onChange",
+    resolver: yupResolver(registerSchema),
+  })
 
-    const router = useRouter();
+  const router = useRouter()
 
-    const handleRegister = async (data: IRegisterRequest) => {
-        console.log("Datos recibidos para registro:", data);
+  const handleRegister = async (data: IRegisterRequest) => {
+    try {
+      const authService = new AuthService()
+      const result = await authService.register(data)
 
-        try {
+      if (result?.statusCode !== 201) {
+        handleError(result.message)
+        return
+      }
 
-            const authService = new AuthService();
-            const result = await authService.register(data);
+      router.push("/dashboard/home")
+      router.refresh()
+    } catch (error) {
+      handleError("Hubo un error durante el registro, por favor intente nuevamente.")
+    }
+  }
 
-            console.log("Resultado de registro:", result);
+  const handleError = (error: string) => {
+    setError("email", {
+      message: error,
+    })
+  }
 
-            if (result?.statusCode !== 201) {
-                console.error("Ocurrio un error al registrar el usuario:", result.message);
-                handleError(result.message);
-                return;
-            }
-
-            console.log("Registro exitoso. Redirigiendo...");
-            router.push("/dashboard/home");
-            router.refresh();
-        } catch (error) {
-            console.error("Error durante el proceso de registro:", error);
-            handleError("Hubo un error durante el registro, por favor intente nuevamente.");
-        }
-    };
-
-    const handleError = (error: string) => {
-        console.log("Manejando error:", error);
-        setError("email", {
-            message: error,
-        });
-    };
-
-    return (
-        <form
-            className="w-full max-w-sm mx-auto p-4 space-y-4"
-            onSubmit={handleSubmit(handleRegister)}
-        >
-            {/* Imagen en la parte superior del formulario */}
-            <div className="flex justify-center mb-6">
-                <img 
-                    src="/path/to/your-image.png" 
-                    alt="Logo o imagen decorativa"
-                    className="w-32 h-32 object-cover"
-                />
+  return (
+    <main className={styles.container}>
+      <div className={styles.loginContainer}>
+        <div className={styles.formSection}>
+          <h1 className={styles.title}>Registrarse</h1>
+          
+          <form className={styles.form} onSubmit={handleSubmit(handleRegister)}>
+            <div className={styles.inputGroup}>
+              <label htmlFor="email" className={styles.label}>Correo Electrónico</label>
+              <input
+                {...register("email")}
+                type="email"
+                id="email"
+                placeholder="Ingresa tu correo"
+                className={styles.input}
+              />
+              {errors.email && <span className={styles.error}>{errors.email.message}</span>}
+            </div>
+            
+            <div className={styles.inputGroup}>
+              <label htmlFor="password" className={styles.label}>Contraseña</label>
+              <input
+                {...register("password")}
+                type="password"
+                id="password"
+                placeholder="Ingresa tu contraseña"
+                className={styles.input}
+              />
+              {errors.password && <span className={styles.error}>{errors.password.message}</span>}
             </div>
 
-            <h2 className="text-2xl font-semibold text-center">Registrarse</h2>
-
-            <FormField<IRegisterRequest>
-                control={control}
-                type="email"
-                label="Correo Electrónico"
-                name="email"
-                error={errors.email}
-                placeholder="Ingresa tu correo"
-            />
-
-            <FormField<IRegisterRequest>
-                control={control}
+            <div className={styles.inputGroup}>
+              <label htmlFor="confirmPassword" className={styles.label}>Confirmar Contraseña</label>
+              <input
+                {...register("confirmPassword")}
                 type="password"
-                label="Contraseña"
-                name="password"
-                error={errors.password}
-                placeholder="Ingresa tu contraseña"
-            />
-
-            <FormField<IRegisterRequest>
-                control={control}
-                type="password"
-                label="Confirmar Contraseña"
-                name="confirmPassword"
-                error={errors.confirmPassword}
+                id="confirmPassword"
                 placeholder="Confirma tu contraseña"
-            />
+                className={styles.input}
+              />
+              {errors.confirmPassword && <span className={styles.error}>{errors.confirmPassword.message}</span>}
+            </div>
 
-            <FormField<IRegisterRequest>
-                control={control}
+            <div className={styles.inputGroup}>
+              <label htmlFor="role" className={styles.label}>Rol</label>
+              <input
+                {...register("role")}
                 type="text"
-                label="Rol"
-                name="role"
-                error={errors.role}
+                id="role"
                 placeholder="Ingresa el rol (e.g., organizer, user)"
-            />
-
-            <button
-                type="submit"
-                className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600"
-            >
-                Registrarse
+                className={styles.input}
+              />
+              {errors.role && <span className={styles.error}>{errors.role.message}</span>}
+            </div>
+            
+            <button type="submit" className={styles.loginButton}>
+              Registrarse
             </button>
-        </form>
-    );
-};
+            
+            <div className={styles.register}>
+              <span>¿Ya tienes una cuenta? </span>
+              <Link href="/login" className={styles.registerLink}>Inicia sesión</Link>
+            </div>
+            
+            <div className={styles.divider}>
+              <span>O Regístrate Con</span>
+            </div>
+            
+            <div className={styles.socialLogin}>
+              <button type="button" className={styles.socialButton} aria-label="Registrarse con Apple">
+                <Apple className={styles.socialIcon} />
+              </button>
+              <button type="button" className={styles.socialButton} aria-label="Registrarse con Twitter">
+                <Twitter className={styles.socialIcon} />
+              </button>
+              <button type="button" className={styles.socialButton} aria-label="Registrarse con Facebook">
+                <Facebook className={styles.socialIcon} />
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        <div className={styles.illustrationSection}>
+          <img 
+            src="/login.png" 
+            alt="Ilustración de registro" 
+            className={styles.illustration}
+          />
+        </div>
+      </div>
+    </main>
+  )
+}

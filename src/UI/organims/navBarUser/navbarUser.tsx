@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
-import { Bell, Download, LogOut, Plus, ChevronDown } from "lucide-react"
+import { Download, LogOut, Plus, ChevronDown } from "lucide-react"
 import { DropdownMenu, DropdownMenuItem } from "@/UI/atoms/index"
 import Button from '@/UI/atoms/button'
 import styles from "./NavBar.module.scss"

@@ -9,8 +9,8 @@ export default function Navbar() {
         <div className="navbar__container">
           <div className="navbar__content">
             <div className="navbar__logo">
-            <Link href="/">
-  <h1 className="navbar__title">VolunteerConnect</h1>
+            <Link href="/" className="A">
+                <h1 className="navbar__title">VolunteerConnect</h1>
             </Link>
             
             </div>
