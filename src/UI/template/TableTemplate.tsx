@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import TableProjects from '../organims/TableProjects';
-import { IPostProject, IResponseUser, IResponsProjects } from '@/app/core/application/dto';
+import { IPostProject, IResponsProjects } from '@/app/core/application/dto';
+import{IResponseUser} from '@/app/core/application/dto/users/use-response.dto'
 import ContainerCard from '../organims/ContainerCard';
 import { ProjectModal } from '@/UI/molecules/NewProject';
 import { ProjectsService } from '@/app/infractrusture/services/projects.service';
@@ -30,7 +31,9 @@ export default function TableTemplate({ dataP, dataU }: dataProps) {
                     description: project.description,
                     startDate: project.startDate,
                     endDate: project.endDate,
+
                     id: project.id 
+
                 };
                 setSelectedProject(projectData);
             }
@@ -82,12 +85,15 @@ export default function TableTemplate({ dataP, dataU }: dataProps) {
                 onEdit={(id) => handleOpenModal(id)}
                 onDelete={handleDelete}
             />
+      
             <ProjectModal
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
                 onSubmit={handleSubmit}
                 initialData={selectedProject}
             />
+
+
             <Pagination data={dataP} />
         </div>
     );

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from "react"
@@ -8,15 +9,16 @@ import Textarea from '@mui/joy/Textarea'
 import { IPostProject } from "@/app/core/application/dto"
 import styles from './ProjectModal.module.scss'
 
+
 interface PostServiceModalProps {
-    isOpen: boolean
-    onClose: () => void
-    onSubmit: (data: IPostProject) => void
-    initialData?: IPostProject | null
+    isOpen: boolean;
+    onClose: () => void;
+    onSubmit: (data: IPostProject) => void;
+    initialData?: IPostProject | null;
 }
 
 export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose, onSubmit, initialData }) => {
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
 
     const {
         control,
@@ -24,6 +26,7 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
         reset,
     } = useForm<IPostProject>({
         mode: "onChange",
+
         defaultValues: {
             title: initialData?.title || "", 
             description: initialData?.description || "",
@@ -32,27 +35,44 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
         },
     })
 
-    
+  
+        resolver: yupResolver(postServiceSchema),
+    });
+
     useEffect(() => {
         if (initialData) {
-            reset(initialData)
+            reset({
+                title: initialData.title || '', // Asegúrate de que nunca sea undefined
+                description: initialData.description || '',
+                startDate: initialData.startDate || '',
+                endDate: initialData.endDate || '',
+            });
+        } else {
+            reset({
+                title: '',  // Valores por defecto cuando no hay `initialData`
+                description: '',
+                startDate: '',
+                endDate: '',
+            });
         }
-    }, [initialData, reset])
+    }, [initialData, reset]);
 
     const handlePostService = async (data: IPostProject) => {
-        setIsLoading(true)
+        setIsLoading(true);
         try {
+
             await onSubmit(data) 
             reset() 
             onClose() 
-        } catch (error) {
-            console.error(error)
-        } finally {
-            setIsLoading(false)
-        }
-    }
 
-    if (!isOpen) return null
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    if (!isOpen) return null;
 
     return (
         <div className={`${styles['modal-overlay']} ${isOpen ? styles.open : ''}`} onClick={onClose}>
@@ -77,7 +97,9 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
                                     id="title"
                                     className={`${styles['input-field']} w-full`}
                                     placeholder="Enter the project title"
+
                                     value={field.value || ""} 
+
                                 />
                             )}
                         />
@@ -142,5 +164,5 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
                 </form>
             </div>
         </div>
-    )
-}
+    );
+};
