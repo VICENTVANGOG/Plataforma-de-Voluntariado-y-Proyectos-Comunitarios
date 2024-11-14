@@ -1,5 +1,7 @@
 export interface IPostProject {
-    id(id: any, formData: IPostProject): unknown;
+
+    id:number
+
     title:       string;
     description: string;
     startDate:   string;

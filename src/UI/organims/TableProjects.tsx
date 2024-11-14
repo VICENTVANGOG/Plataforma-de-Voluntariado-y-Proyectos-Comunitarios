@@ -1,7 +1,6 @@
-'use client';
+import React, { useState } from 'react';
 import { IProject } from '@/app/core/application/dto';
 import { Button, Input } from '@mui/joy';
-import React from 'react';
 import styles from './TableProjects.module.scss';
 
 interface TableProps {
@@ -11,17 +10,27 @@ interface TableProps {
 }
 
 export default function TableProjects({ data, onEdit, onDelete }: TableProps) {
+    const [searchTerm, setSearchTerm] = useState<string>('');
+
+
+    const filteredData = data.filter(project => 
+        project.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className={styles['table-container']}>
             <div className={styles['table-header']}>
                 <h2 className={styles['table-title']}>Lista de Proyectos</h2>
             </div>
 
-        
             <div className={styles['search-bar']}>
-                <Input placeholder="Buscar Proyectos..." sx={{ width: '37%', padding: '10px' }} />
+                <Input 
+                    placeholder="Buscar Proyectos..." 
+                    sx={{ width: '37%', padding: '10px' }} 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)} 
+                />
             </div>
-
 
             <table className={styles['table']}>
                 <thead className={styles['table-header-group']}>
@@ -36,7 +45,7 @@ export default function TableProjects({ data, onEdit, onDelete }: TableProps) {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((project, index) => (
+                    {filteredData.map((project, index) => (
                         <tr key={index} className={styles['table-row']}>
                             <td className={styles['table-cell']} data-label="Titulo">
                                 <span className={styles['table-cell-label']}>Titulo:</span> {project.title}
@@ -56,7 +65,6 @@ export default function TableProjects({ data, onEdit, onDelete }: TableProps) {
                                     {project.isActive ? 'Activo' : 'Inactivo'}
                                 </div>
                             </td>
-
                             <td className={styles['table-cell']} data-label="Organizador">
                                 <span className={styles['table-cell-label']}>Organizador:</span> {project.organizer.name}
                             </td>

@@ -24,7 +24,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ photo, name, email, p
 
   return (
     <div className={styles.profileCard}>
-      {/* Título del perfil */}
+
       <h2 className={styles.title}>Perfil del Usuario</h2>
 
       <div className={styles.photoSection}>

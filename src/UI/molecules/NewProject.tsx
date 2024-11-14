@@ -1,28 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { IoIosCloseCircleOutline } from "react-icons/io";
-import Input from '@mui/joy/Input';
-import Textarea from '@mui/joy/Textarea';
-import { IPostProject } from "@/app/core/application/dto";
-import styles from './ProjectModal.module.scss';
 
-const postServiceSchema = yup.object().shape({
-    title: yup.string().required("The title is required"),
-    description: yup
-        .string()
-        .min(10, "The description must be at least 10 characters long")
-        .required("The description is required"),
-    startDate: yup
-        .string()
-        .required("Start date is required")
-        .matches(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format. Use YYYY-MM-DD."),
-    endDate: yup
-        .string()
-        .required("End date is required")
-        .matches(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format. Use YYYY-MM-DD."),
-});
+'use client';
+
+import React, { useState, useEffect } from "react"
+import { useForm, Controller } from "react-hook-form"
+import { IoIosCloseCircleOutline } from "react-icons/io"
+import Input from '@mui/joy/Input'
+import Textarea from '@mui/joy/Textarea'
+import { IPostProject } from "@/app/core/application/dto"
+import styles from './ProjectModal.module.scss'
+
 
 interface PostServiceModalProps {
     isOpen: boolean;
@@ -37,14 +23,22 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
     const {
         control,
         handleSubmit,
-        formState: { errors },
         reset,
     } = useForm<IPostProject>({
         mode: "onChange",
+
+        defaultValues: {
+            title: initialData?.title || "", 
+            description: initialData?.description || "",
+            startDate: initialData?.startDate || "",
+            endDate: initialData?.endDate || "",
+        },
+    })
+
+  
         resolver: yupResolver(postServiceSchema),
     });
 
-    // Llamamos a `reset` solo cuando los datos iniciales cambian
     useEffect(() => {
         if (initialData) {
             reset({
@@ -66,9 +60,11 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
     const handlePostService = async (data: IPostProject) => {
         setIsLoading(true);
         try {
-            await onSubmit(data);
-            reset();  // Limpiar el formulario después del envío
-            onClose(); // Cerrar el modal
+
+            await onSubmit(data) 
+            reset() 
+            onClose() 
+
         } catch (error) {
             console.error(error);
         } finally {
@@ -101,12 +97,12 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
                                     id="title"
                                     className={`${styles['input-field']} w-full`}
                                     placeholder="Enter the project title"
+
+                                    value={field.value || ""} 
+
                                 />
                             )}
                         />
-                        {errors.title && (
-                            <p className={styles['error-message']}>{errors.title.message}</p>
-                        )}
                     </div>
                     <div className={styles['form-group']}>
                         <label htmlFor="description" className={styles['label']}>Description</label>
@@ -121,12 +117,10 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
                                     className={`${styles['textarea-field']} w-full`}
                                     variant="outlined"
                                     color="primary"
+                                    value={field.value || ""} 
                                 />
                             )}
                         />
-                        {errors.description && (
-                            <p className={styles['error-message']}>{errors.description.message}</p>
-                        )}
                     </div>
                     <div className={styles['form-group']}>
                         <label htmlFor="startDate" className={styles['label']}>Start Date</label>
@@ -139,12 +133,10 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
                                     type="date"
                                     color="primary"
                                     className={`${styles['input-field']} w-full`}
+                                    value={field.value || ""} 
                                 />
                             )}
                         />
-                        {errors.startDate && (
-                            <p className={styles['error-message']}>{errors.startDate.message}</p>
-                        )}
                     </div>
                     <div className={styles['form-group']}>
                         <label htmlFor="endDate" className={styles['label']}>End Date</label>
@@ -157,12 +149,10 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
                                     type="date"
                                     color="primary"
                                     className={`${styles['input-field']} w-full`}
+                                    value={field.value || ""} 
                                 />
                             )}
                         />
-                        {errors.endDate && (
-                            <p className={styles['error-message']}>{errors.endDate.message}</p>
-                        )}
                     </div>
                     <button
                         type="submit"
