@@ -3,11 +3,10 @@ import { useForm, Controller } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { IoIosCloseCircleOutline } from "react-icons/io"
-import Button from "@mui/joy/Button"
 import Input from '@mui/joy/Input'
 import Textarea from '@mui/joy/Textarea'
 import { IPostProject } from "@/app/core/application/dto"
-import styles from './ProjectModal.module.scss' // Importa los estilos SASS
+import styles from './ProjectModal.module.scss'
 
 const postServiceSchema = yup.object().shape({
     title: yup.string().required("The title is required"),

@@ -5,7 +5,7 @@ import { useState } from "react"
 import styles from './hero.module.scss'
 
 export default function Component() {
-  const [isHovered, setIsHovered] = useState(false)
+  const [, setIsHovered] = useState(false)
 
   return (
     <section className={styles.hero}>
