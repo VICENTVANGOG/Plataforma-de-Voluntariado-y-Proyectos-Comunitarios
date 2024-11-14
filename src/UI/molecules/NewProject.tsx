@@ -1,12 +1,12 @@
-import React, { useState } from "react"
-import { useForm, Controller } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
-import { IoIosCloseCircleOutline } from "react-icons/io"
-import Input from '@mui/joy/Input'
-import Textarea from '@mui/joy/Textarea'
-import { IPostProject } from "@/app/core/application/dto"
-import styles from './ProjectModal.module.scss'
+import React, { useState, useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import Input from '@mui/joy/Input';
+import Textarea from '@mui/joy/Textarea';
+import { IPostProject } from "@/app/core/application/dto";
+import styles from './ProjectModal.module.scss';
 
 const postServiceSchema = yup.object().shape({
     title: yup.string().required("The title is required"),
@@ -22,17 +22,17 @@ const postServiceSchema = yup.object().shape({
         .string()
         .required("End date is required")
         .matches(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format. Use YYYY-MM-DD."),
-})
+});
 
 interface PostServiceModalProps {
-    isOpen: boolean
-    onClose: () => void
-    onSubmit: (data: IPostProject) => void
-    initialData?: IPostProject | null
+    isOpen: boolean;
+    onClose: () => void;
+    onSubmit: (data: IPostProject) => void;
+    initialData?: IPostProject | null;
 }
 
 export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose, onSubmit, initialData }) => {
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
 
     const {
         control,
@@ -42,41 +42,54 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
     } = useForm<IPostProject>({
         mode: "onChange",
         resolver: yupResolver(postServiceSchema),
-    })
+    });
 
-    React.useEffect(() => {
+    // Llamamos a `reset` solo cuando los datos iniciales cambian
+    useEffect(() => {
         if (initialData) {
-            reset(initialData)
+            reset({
+                title: initialData.title || '', // Asegúrate de que nunca sea undefined
+                description: initialData.description || '',
+                startDate: initialData.startDate || '',
+                endDate: initialData.endDate || '',
+            });
+        } else {
+            reset({
+                title: '',  // Valores por defecto cuando no hay `initialData`
+                description: '',
+                startDate: '',
+                endDate: '',
+            });
         }
-    }, [initialData, reset])
+    }, [initialData, reset]);
 
     const handlePostService = async (data: IPostProject) => {
-        setIsLoading(true)
+        setIsLoading(true);
         try {
-            await onSubmit(data) 
-            reset() 
-            onClose()
+            await onSubmit(data);
+            reset();  // Limpiar el formulario después del envío
+            onClose(); // Cerrar el modal
         } catch (error) {
-            console.error(error)
+            console.error(error);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }
+    };
 
-    if (!isOpen) return null
+    if (!isOpen) return null;
 
     return (
         <div className={`${styles['modal-overlay']} ${isOpen ? styles.open : ''}`} onClick={onClose}>
             <div className={styles['modal-content']} onClick={(e) => e.stopPropagation()}>
                 <div className={styles['modal-header']}>
-                    <h2 className={styles['modal-title']}>{initialData ? "Edit Service" : "Add Service"}</h2>
+                    <h2 className={styles['modal-title']}>{initialData ? "Edit Project" : "Add Project"}</h2>
                     <button onClick={onClose} className={styles['close-button']} aria-label="Close modal">
                         <IoIosCloseCircleOutline className="w-6 h-6" />
                     </button>
                 </div>
                 <form onSubmit={handleSubmit(handlePostService)} className="p-6 space-y-4">
                     <div className={styles['form-group']}>
-                        <label htmlFor="title" className={styles['label']}>Service Title</label>
+                        <label htmlFor="title" className={styles['label']}>Project Title</label>
                         <Controller
                             name="title"
                             control={control}
@@ -87,7 +100,7 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
                                     type="text"
                                     id="title"
                                     className={`${styles['input-field']} w-full`}
-                                    placeholder="Enter the service title"
+                                    placeholder="Enter the project title"
                                 />
                             )}
                         />
@@ -156,10 +169,10 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
                         className={styles['submit-button']}
                         disabled={isLoading}
                     >
-                        {isLoading ? "Saving..." : initialData ? "Save Changes" : "Add Service"}
+                        {isLoading ? "Saving..." : initialData ? "Save Changes" : "Add Project"}
                     </button>
                 </form>
             </div>
         </div>
-    )
-}
+    );
+};

@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import TableProjects from '../organims/TableProjects';
-import { IPostProject, IResponseUser, IResponsProjects } from '@/app/core/application/dto';
+import { IPostProject, IResponsProjects } from '@/app/core/application/dto';
+import{IResponseUser} from '@/app/core/application/dto/users/use-response.dto'
 import ContainerCard from '../organims/ContainerCard';
 import { ProjectModal } from '@/UI/molecules/NewProject';
 import { ProjectsService } from '@/app/infractrusture/services/projects.service';
@@ -30,6 +31,9 @@ export default function TableTemplate({ dataP, dataU }: dataProps) {
                     description: project.description,
                     startDate: project.startDate,
                     endDate: project.endDate,
+                    id: function (id: any, formData: IPostProject): unknown {
+                        throw new Error('Function not implemented.');
+                    }
                 };
                 setSelectedProject(projectData);
             }
@@ -80,7 +84,7 @@ export default function TableTemplate({ dataP, dataU }: dataProps) {
     isOpen={isModalOpen}
     onClose={handleCloseModal}
     onSubmit={handleSubmit}
-    initialData={selectedProject} // Esto pasará los datos del proyecto si es un proyecto existente
+    initialData={selectedProject}
 />
             <Pagination data={dataP} />
         </div>

@@ -2,6 +2,9 @@ import { IPostProject, IResponsProjects } from "@/app/core/application/dto";
 import { HttpClient } from "../utils/client-http";
 
 export class ProjectsService {
+    update(id: any, formData: IPostProject) {
+        throw new Error('Method not implemented.');
+    }
     private httpClient: HttpClient;
 
     constructor() {
