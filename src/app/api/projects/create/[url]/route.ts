@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from "next-auth/next";
-import { authOptions, CustomSession } from "../../../../auth/[...nextauth]/route";
+import { authOptions, CustomSession } from "../../../auth/[...nextauth]/route";
 
-const defaultBaseUrl = "https://communnityvolunteering-production.up.railway.app";
+const defaultBaseUrl = "https://communnityvolunteering-production.up.railway.app/api/v1";
 
-export async function PUT(request: Request, { params }: { params: { url: string, id: number } }) {
+export async function POST(request: Request, { params }: { params: { url: string } }) {
     try {
         // Obtiene la sesión actual para verificar si está autenticado
         const session = await getServerSession(authOptions) as CustomSession;
@@ -15,12 +15,12 @@ export async function PUT(request: Request, { params }: { params: { url: string,
         const body = await request.json();
 
         // Usa el parámetro 'url' recibido para hacer la solicitud
-        const response = await fetch(`${defaultBaseUrl}/${params.url}/${params.id}`, {
+        const response = await fetch(`${defaultBaseUrl}/${params.url}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${session.user.token}`
             },
-            method: 'PUT',
+            method: 'POST',
             body: JSON.stringify(body)
         });
 

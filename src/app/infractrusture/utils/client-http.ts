@@ -1,7 +1,7 @@
 import { authOptions, CustomSession } from "@/app/api/auth/[...nextauth]/route"
 import { getServerSession } from "next-auth/next"
 
-const defaultBaseUrl = "https://communnityvolunteering-production.up.railway.app"
+const defaultBaseUrl = "https://communnityvolunteering-production.up.railway.app/api/v1"
 
 export class HttpClient {
     private baseUrl: string;
@@ -14,32 +14,24 @@ export class HttpClient {
         const headers: Record<string, string> = {
             "Content-Type": "application/json",
         };
-   
-        if (typeof window === "undefined") { 
-            const session = await getServerSession(authOptions) as CustomSession;
-            if (session && session.user.token) {
-                headers["Authorization"] = `Bearer ${session.user.token}`;
-            }
+
+        // Obtiene la sesión actual para verificar si está autenticado
+        const session = await getServerSession(authOptions) as CustomSession;
+        if (session && session.user.token) {
+            headers["Authorization"] = `Bearer ${session.user.token}`;
         }
-   
+
         return headers;
     }
+
     private async handleResponse(response: Response) {
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: "Error desconocido" }));
+            const errorData = await response.json();
             throw errorData;
         }
-   
-        const contentType = response.headers.get("Content-Type");
-   
-        if (contentType && contentType.includes("application/json")) {
-            return await response.json();
-        } else {
-            return response.text();  
-        }
+        return await response.json();
     }
-   
-    
+
     async get<T>(url: string): Promise<T> {
         const headers = await this.getHeader();
         const response = await fetch(`${this.baseUrl}/${url}`, {

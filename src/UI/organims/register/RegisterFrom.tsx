@@ -1,6 +1,4 @@
 "use client";
-import { IRegisterRequest } from "@/app/core/application/dto";
-import { AuthService } from "@/app/infrastructure/services/register.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";

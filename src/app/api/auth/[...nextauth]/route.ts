@@ -1,96 +1,97 @@
-import { ILoginRequest } from "@/app/core/application/dto";
-import { AuthService } from "@/app/infrastructure/services/auth.service";
+import { ILoginRequest } from "@/app/core/application/dto/auth";
+import { AuthService } from "@/app/infractrusture/services/auth.service";
 import NextAuth, { NextAuthOptions, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-interface AuthUser {
-  id: string;
-  name: string;
-  email: string;
-  token: string;
-  role: string;   // Agrega el rol
-  photo: string;  // Agrega la foto de perfil
+
+interface AuthToken {
+    id?: string;
+    token?: string;
+    photo?: string;  
+    role?: string;   
 }
 
+interface AuthUser {
+    id: string;
+    name: string;
+    email: string;
+    token: string;
+    photo: string;  
+    role: string;   
+}
+
+
 export interface CustomSession extends Session {
-  user: AuthUser;
+    user: {
+        id?: string;
+        token?: string;
+        name?: string | null;
+        email?: string | null;
+        image?: string | null;
+        photo?: string;  
+        role?: string;   
+    };
 }
 
 export const authOptions: NextAuthOptions = {
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Correo Electrónico", type: "text" },
-        password: { label: "Contraseña", type: "password" },
-      },
-      authorize: async (credentials) => {
-        // Verificación de credenciales faltantes
-        if (!credentials?.password || !credentials.email) {
-          console.error("Credenciales faltantes");
-          return null;  // Si faltan credenciales, no permitir login
-        }
+    providers: [
+        CredentialsProvider({
+            name: "Credentials",
+            credentials: {
+                email: { label: "Correo Electrónico", type: "text" },
+                password: { label: "Contraseña", type: "password" },
+            },
+            authorize: async (credentials) => {
+                if (!credentials?.password || !credentials.email) {
+                    console.error("Credenciales faltantes");
+                    return null;
+                }
+                const loginRequest: ILoginRequest = {
+                    email: credentials.email,
+                    password: credentials.password,
+                };
 
-        const loginRequest: ILoginRequest = {
-          email: credentials.email,
-          password: credentials.password,
-        };
+                try {
+                    const authService = new AuthService();
+                    const response = await authService.login(loginRequest);
 
-        try {
-          const authService = new AuthService();
-          const response = await authService.login(loginRequest);
-
-          console.log("Respuesta del backend:", response);  // Verifica la respuesta
-
-          // Verificación de si la respuesta tiene un access_token
-          if (!response || !response.data?.access_token) {
-            console.error("Token no recibido.");
-            return null;  // Si no hay token, retornamos null
-          }
-
-          // Asegúrate de agregar todos los campos necesarios de la respuesta
-          const user = response.data.user;
-
-          return {
-            email: user.email,
-            id: user.sub.toString(),
-            name: user.email,  // O usa el campo adecuado para el nombre
-            token: response.data.access_token,  // Asegúrate de pasar el token aquí
-            role: user.role || "usuario",  // Si existe el campo `role`, usalo, si no, por defecto "usuario"
-            photo: user.photo || "https://via.placeholder.com/150",  // Asegúrate de pasar la foto si existe
-          } as AuthUser;
-
-        } catch (error) {
-          console.error("Error en el proceso de autenticación:", error);
-          return null;  // Si ocurre un error en la autenticación, retornamos null
-        }
-      },
-    }),
-  ],
-  session: {
-    strategy: "jwt",  // Estamos usando JWT para manejar la sesión
-  },
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        // Aquí añadimos los nuevos campos al JWT
-        token.id = user.id;
-        token.token = user.token;
-        token.role = user.role;  // Añadimos el rol al JWT
-        token.photo = user.photo;  // Añadimos la foto al JWT
-      }
-      return token;  // Retornamos el token con la información actualizada
+                    return {
+                        email: loginRequest.email,
+                        name: loginRequest.email,
+                        token: response.data.access_token,
+                        photo: response.data.user.photo,  
+                        role: response.data.user.role,    
+                    } as AuthUser;
+                } catch (error) {
+                    console.log(error);
+                    return Promise.reject(new Error(JSON.stringify(error)));
+                }
+            },
+        }),
+    ],
+    session: {
+        strategy: "jwt",
     },
-    async session({ session, token }) {
-      // Agregamos la información del token a la sesión
-      const customSession = session as CustomSession;
-      customSession.user.id = token.id as string;
-      customSession.user.token = token.token as string;
-      customSession.user.role = token.role as string;  // Asignamos el rol
-      customSession.user.photo = token.photo as string;  // Asignamos la foto
-      return customSession;  // Retornamos la sesión actualizada
+    callbacks: {
+        async jwt({ token, user }) {
+            if (user) {
+                const authUser = user as AuthUser;
+                token.id = authUser.id;
+                token.token = authUser.token;
+                token.photo = authUser.photo;  
+                token.role = authUser.role;    
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            const customSession = session as CustomSession;
+            customSession.user.id = (token as AuthToken).id;
+            customSession.user.token = (token as AuthToken).token;
+            customSession.user.photo = (token as AuthToken).photo;  
+            customSession.user.role = (token as AuthToken).role;    
+            return customSession;
+        },
     },
-  },
 };
 
 export const GET = NextAuth(authOptions);

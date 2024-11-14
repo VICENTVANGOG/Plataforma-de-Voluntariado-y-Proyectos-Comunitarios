@@ -25,10 +25,10 @@ export default function NavBar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.logoContainer}>
-        <Link href="/dashboard/proyect" className={styles.logo}>
+        <Link href="/dashboard/project" className={styles.logo}>
           VolunteerConnect
         </Link>
-        {/* Mostrar el título dinámico */}
+
         <span className={styles.dashboardTitle}>{title}</span>
       </div>
       <div className={styles.actionsContainer}>

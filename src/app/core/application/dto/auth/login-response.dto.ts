@@ -1,11 +1,17 @@
+export interface ILoginResponse {
+    statusCode: number;
+    message:    string;
+    data:       Data;
+}
 
-export interface LoginResponse {
-    data: any;
+export interface Data {
     access_token: string;
-    user: {
-        email: string;
-        sub: number; 
-        role: string;
-        photo:string;  
-    };
+    user:         User;
+}
+
+export interface User {
+    email: string;
+    sub:   number;
+    role:  string;
+    photo: string;
 }

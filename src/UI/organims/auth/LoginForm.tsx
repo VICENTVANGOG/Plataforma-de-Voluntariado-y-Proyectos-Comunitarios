@@ -48,7 +48,7 @@ export const LoginForm = () => {
         return
       }
 
-      router.push("/dashboard/proyect")
+      router.push("/dashboard/project")
       router.refresh()
     } catch (error) {
       console.error("Error durante el proceso de login:", error)

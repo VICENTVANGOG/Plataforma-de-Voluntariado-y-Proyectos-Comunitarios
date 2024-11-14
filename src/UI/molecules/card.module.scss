@@ -1,0 +1,30 @@
+.card {
+    background-color: #fff;
+    padding: 16px;  /* Reducido el padding para hacer la tarjeta más pequeña */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 300px;  /* Controlar el ancho máximo de la tarjeta */
+    height: auto; /* Se ajusta automáticamente la altura según el contenido */
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-title {
+    font-size: 1.125rem;  /* Reducido el tamaño de la fuente para el título */
+    color: #334155;
+}
+
+.card-icon {
+    font-size: 1.5rem;  /* Reduje el tamaño del icono */
+    color: #3b82f6;
+}
+
+.card-data {
+    font-weight: 700;
+    font-size: 1.5rem;  /* Reduje el tamaño de la fuente para los datos */
+    color: #334155;
+}
