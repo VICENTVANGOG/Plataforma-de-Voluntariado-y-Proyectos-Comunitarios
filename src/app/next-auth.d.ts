@@ -1,7 +1,14 @@
 
+
 declare module "next-auth" {
   interface Session {
-    user: AuthUser; 
+    user: {
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      photo?: string | null; 
+      token?:string | null; 
+    };
   }
 
   interface User {
@@ -9,7 +16,7 @@ declare module "next-auth" {
     email: string;
     name: string;
     token: string;
-    photo: string;
+    photo?: string | null;
     role: string;
   }
 }

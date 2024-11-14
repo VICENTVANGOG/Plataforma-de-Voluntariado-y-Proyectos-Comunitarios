@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@/UI/atoms";
+import { Input } from "@/UI/atoms";  // Asegúrate de que el componente Input permita la clase 'className'
 import {
     Control,
     Controller,
@@ -17,6 +17,7 @@ interface IPropsFormField<T extends FieldValues> {
     error?: FieldError;
     id?: string;
     placeholder?: string;
+    classname?: string;  // Haz 'classname' opcional para permitir que no se pase
 }
 
 export const FormField = <T extends FieldValues>({
@@ -27,9 +28,10 @@ export const FormField = <T extends FieldValues>({
     error,
     id,
     placeholder,
+    classname,  // Asegúrate de recibir classname
 }: IPropsFormField<T>) => {
     return (
-        <div className="w-full flex  flex-col mb-4">
+        <div className={`w-full flex flex-col mb-4 ${classname ? classname : ''}`}>  {/* Agrega la clase si se pasa */}
             <label
                 htmlFor={id || label.toLowerCase()}
                 className={`text-sm font-medium`}
@@ -46,6 +48,7 @@ export const FormField = <T extends FieldValues>({
                         error={error?.message}
                         placeholder={placeholder || `Ingrese su ${label.toLowerCase()}`}
                         {...field}
+                        className={classname}  
                     />
                 )}
             />
