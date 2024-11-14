@@ -22,7 +22,7 @@ export default function TableProjects({ data, onEdit, onDelete }: TableProps) {
                 <Input placeholder="Buscar Proyectos..." sx={{ width: '37%', padding: '10px' }} />
             </div>
 
-            {/* Tabla */}
+
             <table className={styles['table']}>
                 <thead className={styles['table-header-group']}>
                     <tr className={styles['table-header-row']}>

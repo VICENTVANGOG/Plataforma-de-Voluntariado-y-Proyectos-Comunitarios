@@ -1,25 +1,29 @@
-"use client"
+'use client'
 
 import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
 import { Download, LogOut, Plus, ChevronDown } from "lucide-react"
 import { DropdownMenu, DropdownMenuItem } from "@/UI/atoms/index"
 import Button from '@/UI/atoms/button'
-import { usePathname } from 'next/navigation' // Importar usePathname
+import { usePathname } from 'next/navigation' 
 import styles from "./NavBar.module.scss"
 
-export default function NavBar() {
+interface NavBarProps {
+  onAdd: () => void; 
+}
+
+export default function NavBar({ onAdd }: NavBarProps) {
   const { data: session, status } = useSession()
-  const pathname = usePathname() // Usar usePathname para obtener la ruta actual
+  const pathname = usePathname() 
 
   if (status === "loading") {
     return <div>Cargando...</div>
   }
 
-  // Determinar el título en función de la ruta actual
+  
   const title = pathname === "/dashboard/perfil" ? "Perfil" : "Dashboard de Proyectos"
 
-  // Verificar si estamos en la ruta de perfil
+
   const isProfilePage = pathname === "/dashboard/perfil"
 
   return (
@@ -36,10 +40,18 @@ export default function NavBar() {
           <Download className="h-4 w-4" />
           Descargar Reporte
         </Button>
-        <Button variant="primary" size="small">
+
+        {/* Botón "Nuevo Proyecto" con la acción de agregar */}
+        <Button
+          variant="primary"
+          size="small"
+          onClick={onAdd}
+          className={styles.addProjectButton}
+        >
           <Plus className="h-4 w-4" />
           Nuevo Proyecto
         </Button>
+
         {session?.user ? (
           <DropdownMenu
             trigger={
@@ -59,7 +71,7 @@ export default function NavBar() {
             }
           >
             <Link href="/dashboard/perfil" className={styles.logo}>
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 className={`${styles.menuItem} ${isProfilePage ? styles.active : ""}`}
               >
                 Perfil

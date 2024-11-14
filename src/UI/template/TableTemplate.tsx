@@ -7,7 +7,7 @@ import ContainerCard from '../organims/ContainerCard';
 import { ProjectModal } from '@/UI/molecules/NewProject';
 import { ProjectsService } from '@/app/infractrusture/services/projects.service';
 import Pagination from '../molecules/Pagination';
-import styles from './TableTemplate.module.scss';
+import NavBar from '../organims/navBarUser/navbarUser';
 
 
 interface dataProps {
@@ -69,18 +69,19 @@ export default function TableTemplate({ dataP, dataU }: dataProps) {
 
     return (
         <div className='mb-4'>
+               <NavBar onAdd={() => handleOpenModal()} />
             <ContainerCard dataP={dataP} dataU={dataU.data}/>
             <TableProjects
                 data={dataP.data}
                 onEdit={(id) => handleOpenModal(id)}
                 onDelete={handleDelete}
             />
-            <ProjectModal
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-                onSubmit={handleSubmit}
-                initialData={selectedProject}
-            />
+         <ProjectModal
+    isOpen={isModalOpen}
+    onClose={handleCloseModal}
+    onSubmit={handleSubmit}
+    initialData={selectedProject} // Esto pasará los datos del proyecto si es un proyecto existente
+/>
             <Pagination data={dataP} />
         </div>
     );

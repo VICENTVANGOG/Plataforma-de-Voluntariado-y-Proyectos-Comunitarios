@@ -6,7 +6,7 @@ const defaultBaseUrl = "https://communnityvolunteering-production.up.railway.app
 
 export async function POST(request: Request, { params }: { params: { url: string } }) {
     try {
-        // Obtiene la sesión actual para verificar si está autenticado
+
         const session = await getServerSession(authOptions) as CustomSession;
         if (!session || !session.user.token) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -14,7 +14,7 @@ export async function POST(request: Request, { params }: { params: { url: string
 
         const body = await request.json();
 
-        // Usa el parámetro 'url' recibido para hacer la solicitud
+       
         const response = await fetch(`${defaultBaseUrl}/${params.url}`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ export async function POST(request: Request, { params }: { params: { url: string
             body: JSON.stringify(body)
         });
 
-        // Maneja la respuesta de la solicitud
+
         if (!response.ok) {
             const errorData = await response.json();
             return NextResponse.json(errorData, { status: response.status });

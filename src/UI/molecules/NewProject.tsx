@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useState } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -9,6 +7,7 @@ import Button from "@mui/joy/Button"
 import Input from '@mui/joy/Input'
 import Textarea from '@mui/joy/Textarea'
 import { IPostProject } from "@/app/core/application/dto"
+import styles from './ProjectModal.module.scss' // Importa los estilos SASS
 
 const postServiceSchema = yup.object().shape({
     title: yup.string().required("The title is required"),
@@ -68,25 +67,17 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
-                <div className="flex justify-between items-center p-6 border-b border-blue-300">
-                    <h2 className="text-2xl font-semibold text-gray-800">{initialData ? "Edit Service" : "Add Service"}</h2>
-                    <Button
-                        color="danger"
-                        variant="outlined"
-                        onClick={onClose}
-                        className="transition-colors"
-                        aria-label="Close modal"
-                    >
+        <div className={`${styles['modal-overlay']} ${isOpen ? styles.open : ''}`} onClick={onClose}>
+            <div className={styles['modal-content']} onClick={(e) => e.stopPropagation()}>
+                <div className={styles['modal-header']}>
+                    <h2 className={styles['modal-title']}>{initialData ? "Edit Service" : "Add Service"}</h2>
+                    <button onClick={onClose} className={styles['close-button']} aria-label="Close modal">
                         <IoIosCloseCircleOutline className="w-6 h-6" />
-                    </Button>
+                    </button>
                 </div>
                 <form onSubmit={handleSubmit(handlePostService)} className="p-6 space-y-4">
-                    <div>
-                        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-                            Service Title
-                        </label>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="title" className={styles['label']}>Service Title</label>
                         <Controller
                             name="title"
                             control={control}
@@ -96,19 +87,17 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
                                     color="primary"
                                     type="text"
                                     id="title"
-                                    className="w-full text-gray-300"
+                                    className={`${styles['input-field']} w-full`}
                                     placeholder="Enter the service title"
                                 />
                             )}
                         />
                         {errors.title && (
-                            <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
+                            <p className={styles['error-message']}>{errors.title.message}</p>
                         )}
                     </div>
-                    <div>
-                        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                            Description
-                        </label>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="description" className={styles['label']}>Description</label>
                         <Controller
                             name="description"
                             control={control}
@@ -117,20 +106,18 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
                                     {...field}
                                     minRows={3}
                                     placeholder="Enter a description"
-                                    className="w-full"
+                                    className={`${styles['textarea-field']} w-full`}
                                     variant="outlined"
                                     color="primary"
                                 />
                             )}
                         />
                         {errors.description && (
-                            <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
+                            <p className={styles['error-message']}>{errors.description.message}</p>
                         )}
                     </div>
-                    <div>
-                        <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">
-                            Start Date
-                        </label>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="startDate" className={styles['label']}>Start Date</label>
                         <Controller
                             name="startDate"
                             control={control}
@@ -139,18 +126,16 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
                                     {...field}
                                     type="date"
                                     color="primary"
-                                    className="w-full"
+                                    className={`${styles['input-field']} w-full`}
                                 />
                             )}
                         />
                         {errors.startDate && (
-                            <p className="mt-1 text-sm text-red-600">{errors.startDate.message}</p>
+                            <p className={styles['error-message']}>{errors.startDate.message}</p>
                         )}
                     </div>
-                    <div>
-                        <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">
-                            End Date
-                        </label>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="endDate" className={styles['label']}>End Date</label>
                         <Controller
                             name="endDate"
                             control={control}
@@ -159,26 +144,21 @@ export const ProjectModal: React.FC<PostServiceModalProps> = ({ isOpen, onClose,
                                     {...field}
                                     type="date"
                                     color="primary"
-                                    className="w-full"
+                                    className={`${styles['input-field']} w-full`}
                                 />
                             )}
                         />
                         {errors.endDate && (
-                            <p className="mt-1 text-sm text-red-600">{errors.endDate.message}</p>
+                            <p className={styles['error-message']}>{errors.endDate.message}</p>
                         )}
                     </div>
-                    <Button
-                        color="primary"
-                        variant="outlined"
+                    <button
                         type="submit"
+                        className={styles['submit-button']}
                         disabled={isLoading}
-                        className={`w-full py-2 px-4 rounded-md text-white font-medium ${isLoading
-                            ? "bg-blue-400 cursor-not-allowed"
-                            : "bg-blue-500 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                            } transition-colors`}
                     >
                         {isLoading ? "Saving..." : initialData ? "Save Changes" : "Add Service"}
-                    </Button>
+                    </button>
                 </form>
             </div>
         </div>
